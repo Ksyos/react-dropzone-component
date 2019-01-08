@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import extend from 'extend'
 import { Icon } from './icon'
 
@@ -9,6 +8,7 @@ export class DropzoneComponent extends React.Component {
   constructor (props) {
     super(props)
 
+    this.node = null
     this.state = { files: [] }
   }
 
@@ -44,11 +44,13 @@ export class DropzoneComponent extends React.Component {
     Dropzone = Dropzone || require('dropzone')
     Dropzone.autoDiscover = false
 
+    Dropzone.confirm = (question, accept, reject) => accept();
+
     if (!this.props.config.postUrl && !this.props.eventHandlers.drop) {
       console.info('Neither postUrl nor a "drop" eventHandler specified, the React-Dropzone component might misbehave.')
     }
 
-    var dropzoneNode = this.props.config.dropzoneSelector || ReactDOM.findDOMNode(this)
+    var dropzoneNode = this.props.config.dropzoneSelector || this.node;
     this.dropzone = new Dropzone(dropzoneNode, options)
     this.setupEvents()
   }
@@ -91,7 +93,7 @@ export class DropzoneComponent extends React.Component {
     this.queueDestroy = false
 
     if (!this.dropzone) {
-      const dropzoneNode = this.props.config.dropzoneSelector || ReactDOM.findDOMNode(this)
+      const dropzoneNode = this.props.config.dropzoneSelector || this.node;
       this.dropzone = new Dropzone(dropzoneNode, this.getDjsConfig())
     }
   }
@@ -132,14 +134,14 @@ export class DropzoneComponent extends React.Component {
 
     if (!this.props.config.postUrl && this.props.action) {
       return (
-        <form action={this.props.action} className={className}>
+        <form ref={(node) => this.node = node} action={this.props.action} className={className}>
           {icons}
           {this.props.children}
         </form>
       )
     } else {
       return (
-        <div className={className}> {icons} {this.props.children} </div>
+        <div ref={(node) => this.node = node} className={className}> {icons} {this.props.children} </div>
       )
     }
   }
