@@ -3,7 +3,10 @@
   "description": "A Dropzone Component for ReactJS",
   "version": "3.2.1",
   "license": "MIT",
-  "repository": "https://github.com/Ksyos/react-dropzone-component",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ksyos/react-dropzone-component"
+  },
   "maintainers": [
     {
       "name": "Felix Rieseberg",
